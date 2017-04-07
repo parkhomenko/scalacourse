@@ -2,18 +2,11 @@ package task1
 
 import java.time.{LocalDate, Period}
 
-class Person {
-  private var name = ""
-  var dateOfBirth = LocalDate.now()
-}
+class Person(private var name: String, var dateOfBirth: LocalDate)
 
 object Person {
-  def create(name: String, dateOfBirth: LocalDate): Person = {
-    val person = new Person
-    person.name = name
-    person.dateOfBirth = dateOfBirth
-    person
-  }
+  def create(name: String, dateOfBirth: LocalDate): Person =
+    new Person(name, dateOfBirth)
 
   def calculateAge(person: Person): Int = {
     val period = Period.between(person.dateOfBirth, LocalDate.now())
