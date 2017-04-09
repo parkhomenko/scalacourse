@@ -1,6 +1,11 @@
 package task5
 
+import scala.io.StdIn;
+
 object EntryPoint extends App {
-  println(Fibonacci.calculate(8, false))
-  println(Fibonacci.calculate(8, true))
+  var number = StdIn.readInt()
+  do {
+    println(Fibonacci.calculate(number, true))
+    number = StdIn.readInt()
+  } while (number != 0)
 }
