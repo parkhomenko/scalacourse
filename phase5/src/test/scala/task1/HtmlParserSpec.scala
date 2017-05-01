@@ -8,8 +8,8 @@ class HtmlParserSpec extends FlatSpec with Matchers {
       "<body>" +
         "<test>" +
           "<a>" +
-            "<strong></strong>" +
-            "<p></p>" +
+            "<strong>something</strong>" +
+            "<p>anothertext</p>" +
           "</a>" +
         "</test>" +
       "</body>" +
