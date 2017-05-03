@@ -17,11 +17,21 @@ class Html extends JavaTokenParsers {
 
   def bodyTagClose: Parser[String] = """\s*</body>""".r
 
-  def singleTag: Parser[String] = "<" ~ tagName ~ "/>" ^^ { case "<" ~ tagName ~ "/>" => tagName }
+  def singleTag: Parser[String] = "<" ~ tagName ~ "/>" ^^
+    { case "<" ~ tagName ~ "/>" => tagName }
 
-  def doubleTag: Parser[(String, Any)] = "<" ~ tagName ~ ">" ~ content ~ "</" ~ tagName ~ ">" ^^ { case "<" ~ openTagName ~ ">" ~ content ~ "</" ~ closeTagName ~ ">" => (openTagName, content) }
+  def startTag: Parser[String] = "<" ~ tagName ~ ">" ^^
+    { case "<" ~ tagName ~ "/>" => tagName }
 
-  def content: Parser[Any] = rep(doubleTag) ^^ { case tag => List() ++ tag } | textContent ^^ (_.toString)
+  def endTag: Parser[String] = "</" ~ tagName ~ ">" ^^
+    { case "</" ~ tagName ~ "/>" => tagName }
+
+  def doubleTag: Parser[(String, Any)] = startTag ~ content ~ endTag ^^
+    { case startTag ~ content ~ endTag if (startTag == endTag) => (startTag, content)
+      case _ => throw new IllegalArgumentException }
+
+  def content: Parser[Any] = rep(doubleTag) ^^
+    { case tag => List() ++ tag } | textContent ^^ (_.toString)
 
   def document: Parser[Any] = doctype ~ htmlTagOpen ~ bodyTagOpen ~ content ~ bodyTagClose ~ htmlTagClose ^^ { case doctype ~ htmlTagOpen ~ bodyTagOpen ~ content ~ bodyTagClose ~ htmlTagClose => content }
 }
